@@ -12,9 +12,9 @@ function SurveyComponent() {
     survey.applyTheme(LayeredDarkPanelless);
     survey.onComplete.add(async function(sender, options) {
         try {
-            const keys = ["first_last_name", "order_email",
+            const keys = ["first_last_name", "order_email", "satisfaction_rating"];
             //"amazon_order_id", 
-             "order_date", "sent_gift_card", "survey_submission_date", "satisfaction_rating", "submitted_feedback_radio", "bad_feedback"]
+             //"order_date", "sent_gift_card", "survey_submission_date", "satisfaction_rating", "submitted_feedback_radio", "bad_feedback"]
             var answers_dict = {};
             const survey_keys = Object.keys(survey.data);
             for (const key of keys) {
@@ -67,11 +67,13 @@ function SurveyComponent() {
                 } else if (key === "sent_gift_card") {
                   answers_dict[key] = null;  
                 } else {
+                    console.log("should not be in ihere ");
                     answers_dict[key] = "None";
                 }
             }
-
+            console.log("answers: ", answers_dict);
             const answers = Object.values(answers_dict);
+            console.log("real answers: ", answers);
             const response = await fetch('/api/gsheets', {
             method: 'POST',
             headers: {
@@ -81,12 +83,14 @@ function SurveyComponent() {
             });
     
             if (!response.ok) {
+                console.log("here", response)
             throw new Error(`Error: ${response.status}`);
             }
     
             const responseData = await response.json();
         } catch (error) {
             // Handle errors here
+            console.log("here 2", error)
         }
     })
     return (<Survey model={survey} isExpanded={true} closeOnCompleteTimeout={-1}/>);

@@ -5,11 +5,11 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const data  = req.body;
+      console.log("Data: ", data);
 
       const credential = JSON.parse(
         Buffer.from(process.env.GOOGLE_AUTH_CREDENTIALS, "base64").toString().replace(/\n/g,"")
-      );      
-
+      );
       const auth = new google.auth.GoogleAuth({
         projectId: "fusernow-rewards",
         credentials: {
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         {
           auth,
           spreadsheetId,
-          range: 'CARTRA Survey Tracker',
+          range: 'CARTRA Amazon Tracker',
           valueInputOption: 'USER_ENTERED',
           resource: {
             values: data,
@@ -38,6 +38,7 @@ export default async function handler(req, res) {
 
       res.status(200).json({ message: 'Data written successfully.' });
     } catch (error) {
+      console.log("errrrrr: ", error)
       res.status(500).json({ error: error.message });
     }
   } else {
